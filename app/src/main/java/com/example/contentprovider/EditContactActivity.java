@@ -45,7 +45,7 @@ public class EditContactActivity extends AppCompatActivity {
 
         if (!newName.isEmpty() && !newPhone.isEmpty()) {
             ContentValues values = new ContentValues();
-            values.put(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, newName);
+            values.put(ContactsContract.Data.DISPLAY_NAME, newName);
             values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, newPhone);
 
             Intent intent = getIntent();
@@ -71,7 +71,8 @@ public class EditContactActivity extends AppCompatActivity {
                 Toast.makeText(this, "Id not found", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Name and phone are not is empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Name and phone are not empty", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

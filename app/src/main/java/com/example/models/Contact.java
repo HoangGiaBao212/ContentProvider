@@ -3,15 +3,35 @@ package com.example.models;
 import java.io.Serializable;
 
 public class Contact implements Serializable {
+
+    private long id;
     private String name;
     private String phone;
+    private String icon;
 
     public Contact() {
     }
 
-    public Contact(String name, String phone) {
+    public Contact(String name, String phone, String icon) {
         this.name = name;
         this.phone = phone;
+        this.icon = icon;
+    }
+
+    public Contact(long id, String name, String phone, String icon) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.icon = icon;
+    }
+
+    // Getters and setters for the ID field
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -30,7 +50,15 @@ public class Contact implements Serializable {
         this.phone = phone;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     public String toString(){
-        return this.name + "\n" + this.phone;
+        return "ID: " + this.id + "\n" + this.name + "\n" + this.phone + "\n" + this.icon;
     }
 }

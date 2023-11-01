@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".DanhBaActivity">
 
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="addContact"
+        android:text="Add" />
+
     <ListView
         android:id="@+id/lvDanhBa"
         android:layout_width="match_parent"

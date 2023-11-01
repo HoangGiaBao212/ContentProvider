@@ -1,8 +1,12 @@
 package com.example.contentprovider;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -16,6 +20,10 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import com.example.models.Contact;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DanhBaActivity extends AppCompatActivity {
 
@@ -31,6 +39,15 @@ public class DanhBaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_danh_ba);
         addControls();
         addEvents();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (checkAndRequestContactsPermission()) {
+            showAllContactFromDevice();
+        }
     }
 
     private void addControls() {
@@ -49,6 +66,23 @@ public class DanhBaActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
+        lvDanhBa.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    Contact selectedContact = dsDanhBa.get(position);
+
+                    Intent detailIntent = new Intent(DanhBaActivity.this, ContactDetailActivity.class);
+                    detailIntent.putExtra("contactId", selectedContact.getId());
+                    detailIntent.putExtra("contactName", selectedContact.getName());
+                    detailIntent.putExtra("contactPhone", selectedContact.getPhone());
+                    startActivity(detailIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(DanhBaActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private boolean checkAndRequestContactsPermission() {
@@ -61,7 +95,7 @@ public class DanhBaActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Call the super method
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == MY_PERMISSIONS_REQUEST_READ_CONTACTS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -72,24 +106,45 @@ public class DanhBaActivity extends AppCompatActivity {
         }
     }
 
-
     private void showAllContactFromDevice() {
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         Cursor cursor = null;
+
         try {
             cursor = getContentResolver().query(uri, null, null, null, null);
             if (cursor != null) {
                 dsDanhBa.clear();
+
+                List<String> alphabetIcons = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"));
+
+                Map<String, List<Contact>> contactMap = new HashMap<>();
+
                 while (cursor.moveToNext()) {
+                    @SuppressLint("Range") long id = cursor.getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                     String tenCotName = ContactsContract.Contacts.DISPLAY_NAME;
                     String tenCotPhone = ContactsContract.CommonDataKinds.Phone.NUMBER;
                     int vtTenCotName = cursor.getColumnIndex(tenCotName);
                     int vtTenCotPhone = cursor.getColumnIndex(tenCotPhone);
                     String name = cursor.getString(vtTenCotName);
                     String phone = cursor.getString(vtTenCotPhone);
-                    Contact contact = new Contact(name, phone);
-                    dsDanhBa.add(contact);
+
+                    String firstLetter = name.substring(0, 1).toUpperCase();
+
+                    String icon = alphabetIcons.contains(firstLetter) ? firstLetter : "#";
+                    Contact contact = new Contact(id, name, phone, icon);
+
+                    if (!contactMap.containsKey(icon)) {
+                        contactMap.put(icon, new ArrayList<>());
+                    }
+                    contactMap.get(icon).add(contact);
                 }
+
+                for (String icon : alphabetIcons) {
+                    if (contactMap.containsKey(icon)) {
+                        dsDanhBa.addAll(contactMap.get(icon));
+                    }
+                }
+
                 adapterDanhBa.notifyDataSetChanged();
             } else {
                 Log.e("DanhBaActivity", "Lỗi trong việc truy vấn danh bạ.");
@@ -104,5 +159,10 @@ public class DanhBaActivity extends AppCompatActivity {
                 cursor.close();
             }
         }
+    }
+
+    public void addContact(View view) {
+        Intent intent = new Intent(DanhBaActivity.this,AddContactActivity.class);
+        startActivity(intent);
     }
 }

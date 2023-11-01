@@ -53,7 +53,7 @@ public class AddContactActivity extends AppCompatActivity {
             values.put(ContactsContract.RawContacts.ACCOUNT_NAME, (String) null);
             Uri rawContactUriInserted = contentResolver.insert(rawContactUri, values);
 
-            long rawContactId = ContentUris.parseId(rawContactUriInserted); // Lấy ID của liên hệ vừa thêm
+            long rawContactId = ContentUris.parseId(rawContactUriInserted);
 
             Uri dataUri = ContactsContract.Data.CONTENT_URI;
             values.clear();

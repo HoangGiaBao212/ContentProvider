@@ -101,7 +101,7 @@ public class DanhBaActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 showAllContactFromDevice();
             } else {
-                Toast.makeText(this, "Ứng dụng cần quyền truy cập danh bạ để hoạt động.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "The app needs permission to access contacts to work", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -147,13 +147,13 @@ public class DanhBaActivity extends AppCompatActivity {
 
                 adapterDanhBa.notifyDataSetChanged();
             } else {
-                Log.e("DanhBaActivity", "Lỗi trong việc truy vấn danh bạ.");
-                Toast.makeText(this, "Lỗi trong việc truy vấn danh bạ.", Toast.LENGTH_SHORT).show();
+                Log.e("DanhBaActivity", "Error in querying contacts");
+                Toast.makeText(this, "Error in querying contacts", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("DanhBaActivity", "Lỗi trong việc truy vấn danh bạ: " + e.getMessage());
-            Toast.makeText(this, "Lỗi trong việc truy vấn danh bạ: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("DanhBaActivity", "Error in querying contacts" + e.getMessage());
+            Toast.makeText(this, "Error in querying contacts" + e.getMessage(), Toast.LENGTH_SHORT).show();
         } finally {
             if (cursor != null) {
                 cursor.close();

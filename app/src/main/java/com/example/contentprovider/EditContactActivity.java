@@ -45,7 +45,7 @@ public class EditContactActivity extends AppCompatActivity {
 
         if (!newName.isEmpty() && !newPhone.isEmpty()) {
             ContentValues values = new ContentValues();
-            values.put(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, newName);
+            values.put(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, newName);
             values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, newPhone);
 
             Intent intent = getIntent();
@@ -62,18 +62,16 @@ public class EditContactActivity extends AppCompatActivity {
                 );
 
                 if (updatedRows > 0) {
-                    Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Update successfully", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(this, "Lỗi khi cập nhật liên hệ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Update error", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Không tìm thấy id", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Id not found", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Tên và số điện thoại không được trống", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Name and phone are not is empty", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 }
